@@ -1,4 +1,4 @@
-# Ghost run on Docker
+# Ghost blog run on Docker
 
 ## Why yet another container for Ghost
 As known, there are many awesome Ghost docker images.For example:
@@ -13,7 +13,7 @@ For `1` above,
 permissions` for running in production. That, and the config file doesn't have any easy way to tweak
 it.                   --from https://hub.docker.com/r/ptimof/ghost/
 
-For `2` and `3`, they either support `SSL`.
+For `2` and `3`, they neither support `SSL`.
 
 ## Usage
 ### Quickstart
@@ -44,9 +44,12 @@ docker build -t repo/image_name:tag .
 
 
 ## Reference
+- [Ghost docs](https://ghost.org/developer/)
+- [Docker docs](http://docs.docker.com/)
 
 ## TODOs
 - [X] Support port mapping between Docker container and host
 - [ ] Ghost Theme hacking
 - [ ] Support SSL
 - [ ] Support data volumn
+- [ ] Support Google Analytics
