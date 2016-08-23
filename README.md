@@ -26,22 +26,39 @@ docker run -d -p host_port:2368 adolphlwq/docker-ghost
 ```
 
 ### Customed Config
-1. download repo:
+- download repo:
 ```
 git clone
 ```
-2. change `config.js` for your own config
+- change `config.js` for your own config
 ```
 vim config.js
 do sth
 :wq
 ```
-3. rebuild docker image
+- rebuild docker image
 ```
 docker build -t repo/image_name:tag .
 ```
-4. run your image
+- run your image
 
+### Backup you blog database
+I suggest you map a volumn from container to host when run ghost image.
+```
+docker run -d --name ghost -p 2368:2368 -v host_path_to_data:/opt/ghost/content/data ghost
+```
+
+## Let's Encrypt on Ubuntu Xneil
+In this section,I will set up a SSL by `[Let's Encrypt](https://letsencrypt.org/)` and `[Nginx](http://nginx.org)`.
+
+- Step 1: install Nginx and letsencrypt on Ubuntu 16.04
+```
+It is easy, I skip
+```
+- Step 2:Obtain SSL CA from `Let's Encript CA`
+```
+[sudo] letsencrypt certonly --webroot -w /var/www/ghost -d example.com -s www.example.com
+```
 
 ## Reference
 - [Ghost docs](https://ghost.org/developer/)
@@ -50,6 +67,6 @@ docker build -t repo/image_name:tag .
 ## TODOs
 - [X] Support port mapping between Docker container and host
 - [ ] Ghost Theme hacking
-- [ ] Support SSL
+- [X] Support SSL via [Let's Encrypt](https://letsencrypt.org/)
 - [ ] Support data volumn
 - [ ] Support Google Analytics
