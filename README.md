@@ -39,8 +39,15 @@ do sth
 - rebuild docker image
 ```
 docker build -t repo/image_name:tag .
+#OR
+make build-dev (build a image for dev and test)
+#OR
+make build-prod (build a image for prod env)
 ```
 - run your image
+```
+docker run -d -p host_port:2368 image_name
+```
 
 ### Backup you blog database
 I suggest you map a volumn from container to host when run ghost image.
@@ -65,8 +72,9 @@ It is easy, I skip
 - [Docker docs](http://docs.docker.com/)
 
 ## TODOs
-- [X] Support port mapping between Docker container and host
-- [ ] Ghost Theme hacking
-- [X] Support SSL via [Let's Encrypt](https://letsencrypt.org/)
-- [ ] Support data volumn
-- [ ] Support Google Analytics
+- [X] Support port mapping between Docker container and host.
+- [X] Support SSL via [Let's Encrypt](https://letsencrypt.org/).
+- [X] Support Google Analytics......[Refer this post](https://www.ghostforbeginners.com/how-to-add-google-analytics-to-ghost/).
+- [X] SUpport Makefile to test and build Docker image**(Linux Only)**.
+- [ ] Ghost Theme hacking.
+- [ ] Support data volumn.
