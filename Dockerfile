@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 MAINTAINER adolphlwq kenan3015@gmail.com
 
 RUN apt-get update && \
-    apt-get install -y vim npm=3.5.2-0ubuntu4 \
+    apt-get install -y npm=3.5.2-0ubuntu4 \
     ca-certificates \
 		wget unzip \
 	  --no-install-recommends && \
