@@ -22,15 +22,13 @@ RUN useradd -m -U -u 1000 $USER && \
     chown $USER:$USER -R /opt/ghost && \
     chmod 755 -R /opt/ghost
 
-# install and config nginx SSL
-RUN apt install -y nginx=1.10.0-0ubuntu0.16.04.2 letsencrypt=0.4.1-1
-# # clean cache
-# RUN rm ghost-0.9.0.zip && \
-#     apt remove -y wget unzip && \
-#     apt clean && \
-#     rm -rf /var/lib/apt/lists/* && \
-#     npm cache clean && \
-#     rm -rf /tmp/npm/*
+# clean cache
+RUN rm ghost-0.9.0.zip && \
+    apt remove -y wget unzip && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm cache clean && \
+    rm -rf /tmp/npm/*
 
 EXPOSE 2368
 ADD config.example.js /opt/ghost/config.js
