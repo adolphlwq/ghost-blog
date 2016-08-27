@@ -28,9 +28,9 @@ docker run -d -p host_port:2368 adolphlwq/docker-ghost
 ### Customed Config
 - download repo:
 ```
-git clone
+git clone https://github.com/adolphlwq/lwqBlog.git
 ```
-- change `config.js` for your own config
+- change `config.example.js` for your own config
 ```
 vim config.js
 do sth
@@ -39,23 +39,28 @@ do sth
 - rebuild docker image
 ```
 docker build -t repo/image_name:tag .
-#OR
-make build-dev (build a image for dev and test)
-#OR
+# OR use command make
+make build-dev (build a image for dev and test env)
+# OR
 make build-prod (build a image for prod env)
 ```
 - run your image
 ```
 docker run -d -p host_port:2368 image_name
+# OR use make
+make dev (setup ghost on dev env)
+# OR
+make prod (setup ghost on prod env)
 ```
 
-### Backup you blog database
+
+### Backup your blog database
 I suggest you map a volumn from container to host when run ghost image.
 ```
 docker run -d --name ghost -p 2368:2368 -v host_path_to_data:/opt/ghost/content/data ghost
 ```
 
-## Let's Encrypt on Ubuntu Xneil
+## Let's Encrypt on Ubuntu Xenial
 In this section,I will set up a SSL by `[Let's Encrypt](https://letsencrypt.org/)` and `[Nginx](http://nginx.org)`.
 
 - Step 1: install Nginx and letsencrypt on Ubuntu 16.04
@@ -76,5 +81,6 @@ It is easy, I skip
 - [X] Support SSL via [Let's Encrypt](https://letsencrypt.org/).
 - [X] Support Google Analytics......[Refer this post](https://www.ghostforbeginners.com/how-to-add-google-analytics-to-ghost/).
 - [X] SUpport Makefile to test and build Docker image**(Linux Only)**.
+- [ ] Set corn job to reobtain SSL CA from `Let's Encrypt`.
 - [ ] Ghost Theme hacking.
 - [ ] Support data volumn.
