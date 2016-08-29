@@ -54,10 +54,32 @@ make prod (setup ghost on prod env)
 ```
 
 
-### Backup your blog database
+### Volumn your blog database
 I suggest you map a volumn from container to host when run ghost image.
 ```
 docker run -d --name ghost -p 2368:2368 -v host_path_to_data:/opt/ghost/content/data ghost
+```
+
+### Backup your volumn data
+**Note:** It is used on Linux
+1. backup script
+```shell
+#!/bin/bash
+DATA_DIR=$1    #data dir to backup
+STORE_DIR=$2   #data dir to store backup date
+tar zcvf ${STORE_DIR}/ghost_content_data_`date "+%Y_%m_%d_%H_%M_%S"`.tar.gz ${DATA_DIR}
+```
+2. `crontab -e`
+```shell
+# m   h  dom mon dow   command
+ 30  3   *   *   *    path/to/ghost_blog_data_backup.sh path/to/DATA_DIR path/to/STORE_DIR
+```
+3. done!
+
+### Reobtain Let's Encrypt certificates
+edit `crontab -e` on Linux
+```shell
+ 0  0   1   */2   *    letsencrypt renew
 ```
 
 ## Let's Encrypt on Ubuntu Xenial
@@ -67,10 +89,33 @@ In this section,I will set up a SSL by `[Let's Encrypt](https://letsencrypt.org/
 ```
 It is easy, I skip
 ```
-- Step 2:Obtain SSL CA from `Let's Encript CA`
+- Step 2: Obtain SSL CA from `Let's Encript CA`
 ```
 [sudo] letsencrypt certonly --webroot -w /var/www/ghost -d example.com -s www.example.com
 ```
+[click here](https://certbot.eff.org) to learn more from **certbot** ACME client.
+- config Nginx
+```
+server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    listen 443 ssl;
+    ssl_certificate       path/to/cert;
+    ssl_certificate_key   path/to/cert_key;
+
+    location / {
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header  Host $http_host;
+        proxy_set_header  X-Forwarded-Proto $scheme;
+        proxy_set_header  X-Real-IP $remote_addr;
+        proxy_set_header  Host      $host;
+        proxy_pass        http://127.0.0.1:2368;
+    }
+}
+```
+detail info [See Here](https://github.com/adolphlwq/lwqBlog/blob/master/SSL/nginx_ssl_for_ghost.conf)
+
 
 ## Reference
 - [Ghost docs](https://ghost.org/developer/)
@@ -81,6 +126,7 @@ It is easy, I skip
 - [X] Support SSL via [Let's Encrypt](https://letsencrypt.org/).
 - [X] Support Google Analytics......[Refer this post](https://www.ghostforbeginners.com/how-to-add-google-analytics-to-ghost/).
 - [X] SUpport Makefile to test and build Docker image**(Linux Only)**.
-- [ ] Set corn job to reobtain SSL CA from `Let's Encrypt`.
+- [X] Set cron job to reobtain certificates from `Let's Encrypt`.
+- [X] Set cron job to backup data from container's volumn.
+- [X] Support data volumn.
 - [ ] Ghost Theme hacking.
-- [ ] Support data volumn.
