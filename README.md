@@ -89,12 +89,26 @@ In this section,I will set up a SSL by `[Let's Encrypt](https://letsencrypt.org/
 ```
 It is easy, I skip
 ```
-- Step 2: Obtain SSL CA from `Let's Encript CA`
+- Step 2: config Nginx
+```
+server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    location / {
+        index index.html;
+    }
+}
+```
+detail info [See Here](https://github.com/adolphlwq/lwqBlog/blob/master/SSL/nginx_ssl_for_ghost.conf)
+
+- Step 3: Obtain SSL CA from `Let's Encript CA`
 ```
 [sudo] letsencrypt certonly --webroot -w /var/www/ghost -d example.com -s www.example.com
 ```
 [click here](https://certbot.eff.org) to learn more from **certbot** ACME client.
-- config Nginx
+
+- Step 4: add Nginx SSL and domain config
 ```
 server {
     listen 80;
@@ -114,8 +128,6 @@ server {
     }
 }
 ```
-detail info [See Here](https://github.com/adolphlwq/lwqBlog/blob/master/SSL/nginx_ssl_for_ghost.conf)
-
 
 ## Reference
 - [Ghost docs](https://ghost.org/developer/)
