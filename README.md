@@ -18,42 +18,41 @@ For `2` and `3`, they neither support `SSL`.
 
 ## Usage
 ### Quickstart
-```shell
-docker run -d -P adolphlwq/docker-ghost
-```
-or:
-```shell
-docker run -d -p host_port:2368 adolphlwq/docker-ghost
-```
+1. run ghost container
+    ```shell
+    docker run -d -P adolphlwq/docker-ghost
+    or:
+    docker run -d -p host_port:2368 adolphlwq/docker-ghost
+    ```
+2. browser [localhost:2368](localhost:2368) default.
 
 ### Customed Config
-- download repo:
-```
-git clone https://github.com/adolphlwq/lwqBlog.git
-```
-- change `config.example.js` for your own config
-```
-vim config.js
-do sth
-:wq
-```
-- rebuild docker image
-```
-docker build -t repo/image_name:tag .
-# OR use command make
-make build-dev (build a image for dev and test env)
-# OR
-make build-prod (build a image for prod env)
-```
-- run your image
-```
-docker run -d -p host_port:2368 image_name
-# OR use make
-make dev (setup ghost on dev env)
-# OR
-make prod (setup ghost on prod env)
-```
-
+1. download repo:
+    ```
+    git clone https://github.com/adolphlwq/lwqBlog.git
+    ```
+2. change **config.example.js** for your own config
+    ```
+    vim config.js
+    do sth
+    :wq
+    ```
+3. rebuild docker image
+    ```
+    docker build -t repo/image_name:tag .
+    # OR use command make
+    make build-dev (build a image for dev and test env)
+    # OR
+    make build-prod (build a image for prod env)
+    ```
+4. run your image
+    ```
+    docker run -d -p host_port:2368 image_name
+    # OR use make
+    make dev (setup ghost on dev env)
+    # OR
+    make prod (setup ghost on prod env)
+    ```
 
 ### Volumn your blog database
 I suggest you map a volumn from container to host when run ghost image.
@@ -62,19 +61,19 @@ docker run -d --name ghost -p 2368:2368 -v host_path_to_data:/opt/ghost/content/
 ```
 
 ### Backup your volumn data
-**Note:** It is used on Linux
+**Note:** It is useful on Linux
 1. backup script
-```shell
-#!/bin/bash
-DATA_DIR=$1    #data dir to backup
-STORE_DIR=$2   #data dir to store backup date
-tar zcvf ${STORE_DIR}/ghost_content_data_`date "+%Y_%m_%d_%H_%M_%S"`.tar.gz ${DATA_DIR}
-```
+    ```shell
+    #!/bin/bash
+    DATA_DIR=$1    #data dir to backup
+    STORE_DIR=$2   #data dir to store backup date
+    tar zcvf ${STORE_DIR}/ghost_content_data_`date "+%Y_%m_%d_%H_%M_%S"`.tar.gz ${DATA_DIR}
+    ```
 2. `crontab -e`
-```shell
-# m   h  dom mon dow   command
- 30  3   *   *   *    path/to/ghost_blog_data_backup.sh path/to/DATA_DIR path/to/STORE_DIR
-```
+    ```shell
+    # m   h  dom mon dow   command
+    30  3   *   *   *    path/to/ghost_blog_data_backup.sh path/to/DATA_DIR path/to/STORE_DIR
+    ```
 3. done!
 
 ### Reobtain Let's Encrypt certificates
@@ -86,49 +85,60 @@ edit `crontab -e` on Linux
 ## Let's Encrypt on Ubuntu Xenial
 In this section,I will set up a SSL by `[Let's Encrypt](https://letsencrypt.org/)` and `[Nginx](http://nginx.org)`.
 
-- Step 1: install Nginx and letsencrypt on Ubuntu 16.04
-```
-It is easy, I skip
-```
-- Step 2: config Nginx
-```
-server {
-    listen 80;
-    server_name example.com www.example.com;
+1. install Nginx and letsencrypt on Ubuntu 16.04
+    ```
+    It is easy, I skip
+    ```
+2. config Nginx
+    ```
+    server {
+        listen 80;
+        server_name example.com www.example.com;
 
-    location / {
-        index index.html;
+        location / {
+            index index.html;
+        }
     }
-}
-```
+    ```
 detail info [See Here](https://github.com/adolphlwq/lwqBlog/blob/master/SSL/nginx_ssl_for_ghost.conf)
 
-- Step 3: Obtain SSL CA from `Let's Encript CA`
-```
-[sudo] letsencrypt certonly --webroot -w /var/www/ghost -d example.com -s www.example.com
-```
+3. obtain SSL CA from `Let's Encript CA`
+    ```
+    [sudo] letsencrypt certonly --webroot -w /var/www/ghost -d example.com -s www.example.com
+    ```
 [click here](https://certbot.eff.org) to learn more from **certbot** ACME client.
 
-- Step 4: add Nginx SSL and domain config
-```
-server {
-    listen 80;
-    server_name example.com www.example.com;
+4. add Nginx SSL and domain config
+    ```
+    server {
+        listen 80;
+        server_name example.com www.example.com;
+        root path/to/root;
 
-    listen 443 ssl;
-    ssl_certificate       path/to/cert;
-    ssl_certificate_key   path/to/cert_key;
-
-    location / {
-        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header  Host $http_host;
-        proxy_set_header  X-Forwarded-Proto $scheme;
-        proxy_set_header  X-Real-IP $remote_addr;
-        proxy_set_header  Host      $host;
-        proxy_pass        http://127.0.0.1:2368;
+        ssl on;
+        listen 443 ssl;
+        ssl_certificate       path/to/cert;
+        ssl_certificate_key   path/to/cert_key;
+        ssl_session_timeout  30m;
+        
+        if ($scheme = http) {
+        return 301 https://$server_name$request_uri;
+        }
+        
+        location / {
+            proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header  Host $http_host;
+            proxy_set_header  X-Forwarded-Proto $scheme;
+            proxy_set_header  X-Real-IP $remote_addr;
+            proxy_set_header  Host      $host;
+            proxy_pass        http://127.0.0.1:2368;
+        }
+        
+        location ~ /.well-known {
+            allow all;
+        }
     }
-}
-```
+    ```
 
 ## Reference
 - [Ghost docs](https://ghost.org/developer/)
