@@ -1,35 +1,20 @@
-FROM ubuntu:16.04
+FROM node:4-alpine
 MAINTAINER adolphlwq kenan3015@gmail.com
 
-RUN apt-get update && \
-    apt-get install -y npm=3.5.2-0ubuntu4 \
-    ca-certificates \
-		wget unzip \
-	  --no-install-recommends && \
-    ln -s /usr/bin/nodejs /usr/bin/node && \
-    mkdir -p /opt/ghost
+WORKDIR /var/www/ghost
+ENV GHOST_ZIP_URL=https://github.com/TryGhost/Ghost/releases/download/1.0.0/Ghost-1.0.0.zip \
+    GHOST_ZIP_NAME=Ghost-1.0.0.zip
 
-# install ghost
-WORKDIR /opt/ghost
-RUN wget https://ghost.org/zip/ghost-0.9.0.zip && \
-    unzip ghost-0.9.0.zip && \
-    npm install forever -g && \
-    npm install --production
+RUN apk add --update --no-cache ca-certificates curl unzip && \
+    rm -rf /var/cache/apk/
 
-ENV NODE_ENV=production \
-    USER=ghost
-RUN useradd -m -U -u 1000 $USER && \
-    chown $USER:$USER -R /opt/ghost && \
-    chmod 755 -R /opt/ghost
+# download ghost zip and extract
+RUN curl -Lo $GHOST_ZIP_NAME $GHOST_ZIP_URL && \
+    unzip $GHOST_ZIP_NAME && \
+    rm $GHOST_ZIP_NAME && \
+    npm install && \
+    npm install -g knex-migrator && \
+    apk del curl unzip
 
-# clean cache
-RUN rm ghost-0.9.0.zip && \
-    apt remove -y wget unzip && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    npm cache clean && \
-    rm -rf /tmp/npm/*
-
-EXPOSE 2368
-ADD config.example.js /opt/ghost/config.js
-CMD ["node", "index.js"]
+ADD config.development.json /var/www/ghost/config.development.json
+CMD ["knex-migrator", "init", "&&", "node", "index.js"]

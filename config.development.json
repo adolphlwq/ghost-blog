@@ -1,0 +1,40 @@
+{
+  "url": "http://localhost:2369/",
+  "server": {
+    "port": 2369,
+    "host": "127.0.0.1"
+  },
+  "database": {
+    "client": "sqlite3",
+    "connection": {
+      "filename": "content/data/ghost.db"
+    },
+    "useNullAsDefault": true,
+    "debug": false
+  },
+  "mail": {
+      "from":"Adolphlwq <nalan3015@126.com>",
+      "transport": "SMTP",
+      "options": {
+          "service": "Mailgun",
+          "auth": {
+              "user": "user", 
+              "pass": "pass"
+          }
+      }
+  },
+  "logging": {
+    "path": "content/",
+    "level": "info",
+    "rotation": {
+      "enabled": true,
+      "count": 15,
+      "period": "1d"
+    },
+    "transports": [
+      "file",
+      "stdout"
+    ]
+  },
+  "process": "local"
+}
