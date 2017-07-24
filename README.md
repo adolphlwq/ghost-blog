@@ -1,20 +1,7 @@
 # Ghost blog run on Docker
 
-## Why yet another container for Ghost
-As known, there are many awesome Ghost docker images.For example:
-
-1. [Ghost image from Docker library](https://github.com/docker-library/ghost)
-2. [gold/ghost](https://hub.docker.com/r/gold/ghost/)
-3. [ptimof/ghost](https://hub.docker.com/r/ptimof/ghost/)
-
-Although above images have few point to improve.
-
-For `1` above,
->The official container for Ghost is fine for running in development mode, but it has the `wrong
-permissions` for running in production. That, and the config file doesn't have any easy way to tweak
-it.                   --from https://hub.docker.com/r/ptimof/ghost/
-
-For `2` and `3`, they neither support `SSL`.
+## Change log
+1. 2017.7.25 Ghost 1.0.0
 
 ## Usage
 ### Quickstart
@@ -29,14 +16,15 @@ For `2` and `3`, they neither support `SSL`.
 ### Customed Config
 1. download repo:
     ```
-    git clone https://github.com/adolphlwq/lwqBlog.git
+    git clone https://github.com/adolphlwq/ghost-blog.git
     ```
-2. change **config.example.js** for your own config
+2. change **config.development.json** for your own config
     ```
-    vim config.js
-    do sth
+    vim config.development.json
+    change/add some config
     :wq
     ```
+    **More config plz see [ghost config](https://docs.ghost.org/docs/configuring-ghost#section-custom-configuration-files)**
 3. rebuild docker image
     ```
     docker build -t repo/image_name:tag .
@@ -57,7 +45,7 @@ For `2` and `3`, they neither support `SSL`.
 ### Volumn your blog database
 I suggest you map a volumn from container to host when run ghost image.
 ```
-docker run -d --name ghost -p 2368:2368 -v host_path_to_data:/opt/ghost/content/data ghost
+docker run -d --name ghost -p 2368:2368 -v host_path_to_data:/var/www/ghost/content/data ghost
 ```
 
 ### Backup your volumn data
@@ -152,4 +140,5 @@ detail info [See Here](https://github.com/adolphlwq/lwqBlog/blob/master/SSL/ngin
 - [X] Set cron job to reobtain certificates from `Let's Encrypt`.
 - [X] Set cron job to backup data from container's volumn.
 - [X] Support data volumn.
-- [ ] Ghost Theme hacking.
+- [X] Ghost Theme hacking, plz see [adolphlwq/ghost-theme-kd](https://github.com/adolphlwq/ghost-theme-kd)
+- [ ] try using [Caddy](https://github.com/mholt/caddy) to replace nginx
