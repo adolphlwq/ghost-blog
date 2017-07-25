@@ -17,4 +17,6 @@ RUN curl -Lo $GHOST_ZIP_NAME $GHOST_ZIP_URL && \
     apk del curl unzip
 
 ADD config.development.json /var/www/ghost/config.development.json
-CMD ["knex-migrator", "init", "&&", "node", "index.js"]
+ADD start.sh /var/www/ghost/start.sh
+RUN chmod +x start.sh
+CMD ["./start.sh"]
