@@ -1,5 +1,5 @@
 build-dev:
-	docker build --no-cache -t ghost-dev .
+	docker build -t ghost-dev .
 build-prod:
 	docker build --no-cache -t ghost-prod .
 dev: build-dev
