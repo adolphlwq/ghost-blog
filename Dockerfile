@@ -11,7 +11,7 @@ ADD start.sh /var/www/ghost/start.sh
 
 RUN apk add --update --no-cache ca-certificates curl unzip && \
     rm -rf /var/cache/apk/ && \
-    adduser -D -u 1001 ghost
+    adduser -D -u 9001 ghost
 
 
 # download ghost zip and extract
