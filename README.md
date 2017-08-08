@@ -141,4 +141,4 @@ detail info [See Here](https://github.com/adolphlwq/lwqBlog/blob/master/SSL/ngin
 - [X] Set cron job to backup data from container's volumn.
 - [X] Support data volumn.
 - [X] Ghost Theme hacking, plz see [adolphlwq/ghost-theme-kd](https://github.com/adolphlwq/ghost-theme-kd)
-- [ ] try using [Caddy](https://github.com/mholt/caddy) to replace nginx
+- [X] try using [Caddy](https://github.com/mholt/caddy) to replace nginx
