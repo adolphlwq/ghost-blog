@@ -1,7 +1,7 @@
 build-dev:
 	docker build -t ghost-dev .
 build-prod:
-	docker build --no-cache -t ghost-prod .
+	docker build -t ghost-prod .
 dev: 
 	docker run -d --name ghost-dev -p 2368:2368 ghost-dev
 prod:

@@ -1,7 +1,8 @@
 # Ghost blog run on Docker
 
 ## Change log
-1. 2017.7.25 Ghost 1.0.0
+1. 2018.7.1 Ghost 1.24.6
+2. 2017.7.25 Ghost 1.0.0
 
 ## Usage
 ### Quickstart
