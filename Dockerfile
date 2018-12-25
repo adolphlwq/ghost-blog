@@ -1,8 +1,8 @@
-FROM node:6.14-alpine
+FROM node:8.14-alpine
 MAINTAINER adolphlwq kenan3015@gmail.com
 
-ENV GHOST_VERSION=1.24.6 \
-    GHOST_CLI_VERSION=1.8.1 \
+ENV GHOST_VERSION=2.7.1 \
+    GHOST_CLI_VERSION=1.9.8 \
     GHOST_INSTALL=/var/www/ghost
     
 WORKDIR ${GHOST_INSTALL}
